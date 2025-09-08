@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Virtual Tour</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <!-- Background (360 image) -->
+      <a-sky id="roomA" src="assets/para workshop.jpg" rotation="0 -90 0"></a-sky>
+
+      <!-- Camera (mouse click only, no yellow fuse) -->
+      <a-entity 
+        camera 
+        look-controls 
+        raycaster="objects: .clickable" 
+        cursor="rayOrigin: mouse">
+      </a-entity>
+
+      <!-- 🔹 Hotspot: Jump to another HTML page -->
+      <a-entity id="hotspot01"
+        geometry="primitive: circle; radius: 0.8"
+        material="color: white; opacity: 0.9; shader: flat"
+        position="4.27 1.01 -8.765"
+        class="clickable"
+        look-at="[camera]"
+        animation__pulse="property: scale; to: 1.3 1.3 1; dir: alternate; dur: 1000; loop: true">
+      </a-entity>
+
+      <!-- 🔹 Hotspot: Open PDF (Google Drive link or direct PDF) -->
+      <a-entity id="hotspot02"
+        geometry="primitive: circle; radius: 0.5"
+        material="color: red; opacity: 0.9; shader: flat"
+        position="-3.098 2.09 -4.271"
+        class="clickable"
+        look-at="[camera]"
+        animation__pulse="property: scale; to: 0.816 0.816 1.0; dir: alternate; dur: 1000; loop: true">
+      </a-entity>
+
+      <!-- 🔹 Hotspot: Open Video (Google Drive link or YouTube) -->
+      <a-entity id="hotspot03"
+        geometry="primitive: circle; radius: 0.8"
+        material="color: blue; opacity: 0.9; shader: flat"
+        position="-0.755 33.71 -18.70"
+        class="clickable"
+        look-at="[camera]"
+        animation__pulse="property: scale; to: 3.627 6.12 1.09; dir: alternate; dur: 1000; loop: true">
+      </a-entity>
+    </a-scene>
+
+    <!-- Scripts for Hotspot Clicks -->
+    <script>
+      // Jump to another page
+      document.querySelector('#hotspot01').addEventListener('click', () => {
+        window.location.href = "hmi02.html"; // or any page you want
+      });
+
+      // Open PDF (Google Drive link or PDF file)
+      document.querySelector('#hotspot02').addEventListener('click', () => {
+        window.location.href = "hmi01.html"; // or any page you want
+      });
+
+      // Open Video (Google Drive or YouTube)
+      document.querySelector('#hotspot03').addEventListener('click', () => {
+        window.location.href = "hmi03.html"; // or any page you want
+      });
+    </script>
+  </body>
+</html>
