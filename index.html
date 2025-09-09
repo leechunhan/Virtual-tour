@@ -80,7 +80,7 @@
     const viewer = new Marzipano.Viewer(document.getElementById('pano'));
 
     // Panorama image
-    const source = Marzipano.ImageUrlSource.fromString("assets/para workshop.jpg");
+    const source = Marzipano.ImageUrlSource.fromString("assets/para-workshop.jpg");
     const geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
     const limiter = Marzipano.RectilinearView.limit.traditional(1024, 100*Math.PI/180);
     const view = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 }, limiter);
