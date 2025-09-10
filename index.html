@@ -66,16 +66,89 @@
         opacity: 0;
       }
     }
-  </style>
+
+
+    /* 🔹 Welcome overlay */
+    #welcomeOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      text-align: center;
+      padding: 20px;
+    }
+    #welcomeOverlay h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    #welcomeOverlay p {
+      font-size: 1.1em;
+      margin-bottom: 20px;
+    }
+    #startBtn {
+      background: #4CAF50;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      color: white;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #startBtn:hover { background: #45a049; }
+
+
+</style>
+
 
 
   <!-- Marzipano library insert *Important -->
   <script src="lib/marzipano.js"></script>
 </head>
 <body>
+
+  <!-- Welcome popup -->
+  <div id="welcomeOverlay">
+    <h1>👋 Welcome to the interactive workshop tour </h1>
+    <p>
+      🖱️ Drag to look around.<br>
+      ⚪ Click <b>Dots</b> for explore more details about TOX® Monitoring, TOX® Electric Drives and Machine etc<br>
+      ➡️ Click <b>Arrows</b> to move between workshop & laboratory halls.
+      
+    
+      <h3>👆 What is this Virtual Tour For?</h3>
+      These panels provide access to various sections where users can explore Tox products and retrieve documents for training or application planning.</p>
+    
+    </p>
+    <button id="startBtn">🚀 Start Tour</button>
+  </div>
+
+
+  <!-- Panorama container -->
   <div id="pano"></div>
 
   <script>
+
+  // Hide overlay on Start click
+  // Check if popup was already shown
+if (localStorage.getItem("tourStarted")) {
+  document.getElementById("welcomeOverlay").style.display = "none";
+}
+
+  // Hide overlay on Start click
+  document.getElementById("startBtn").onclick = function() {
+  document.getElementById("welcomeOverlay").style.display = "none";
+  localStorage.setItem("tourStarted", "true"); // Remember choice
+};
+
+  
+
     // Create viewer
     const viewer = new Marzipano.Viewer(document.getElementById('pano'));
 
@@ -115,11 +188,11 @@
     scene.switchTo();
 
     // 🔹 Debug tool: Click anywhere to get yaw/pitch - to locate coordinate of hotspots place
-    //document.getElementById("pano").addEventListener("click", function(event) {
-    //const coords = view.screenToCoordinates({ x: event.clientX, y: event.clientY });
+    document.getElementById("pano").addEventListener("click", function(event) {
+    const coords = view.screenToCoordinates({ x: event.clientX, y: event.clientY });
     //console.log("Clicked at → Yaw:", coords.yaw.toFixed(3), "Pitch:", coords.pitch.toFixed(3));
     //alert("Yaw: " + coords.yaw.toFixed(3) + " | Pitch: " + coords.pitch.toFixed(3));
-    //});
+    });
 
 
   </script>
