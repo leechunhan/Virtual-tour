@@ -135,16 +135,15 @@
 
   <script>
 
-  // Hide overlay on Start click
-  // Check if popup was already shown
-if (localStorage.getItem("tourStarted")) {
+  // Check if popup was already shown in this session
+if (sessionStorage.getItem("tourStarted")) {
   document.getElementById("welcomeOverlay").style.display = "none";
 }
 
-  // Hide overlay on Start click
-  document.getElementById("startBtn").onclick = function() {
+// Hide overlay on Start click
+document.getElementById("startBtn").onclick = function() {
   document.getElementById("welcomeOverlay").style.display = "none";
-  localStorage.setItem("tourStarted", "true"); // Remember choice
+  sessionStorage.setItem("tourStarted", "true"); // Remember only for this session
 };
 
   
