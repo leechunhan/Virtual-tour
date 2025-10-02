@@ -26,52 +26,31 @@
       cursor: pointer;
       z-index: 1;
     }
-
-    /* Hover effect */
-    .hotspot-dot:hover {
-      background: #4CAF50;
-      transform: scale(1.2);
-    }
-
-    /* Ripple waves */
-    .hotspot-dot::before, 
-    .hotspot-dot::after {
+    .hotspot-dot:hover { background: #4CAF50; transform: scale(1.2); }
+    .hotspot-dot::before, .hotspot-dot::after {
       content: "";
       position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 100%;
-      height: 100%;
+      left: 50%; top: 50%;
+      width: 100%; height: 100%;
       border-radius: 50%;
       border: 2px solid rgba(255, 255, 255, 0.7);
       transform: translate(-50%, -50%) scale(1);
       opacity: 0;
       animation: ripple 2s infinite;
     }
-
-    .hotspot-dot::after {
-      animation-delay: 1s; /* second wave */
-    }
-
+    .hotspot-dot::after { animation-delay: 1s; }
     @keyframes ripple {
-      0% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 0.8;
-      }
-      70% {
-        transform: translate(-50%, -50%) scale(2.5);
-        opacity: 0;
-      }
-      100% {
-        opacity: 0;
-      }
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+      70% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+      100% { opacity: 0; }
     }
 
-    /* 🔹 Arrow hotspot (emoji version) */
+    /* 🔹 Arrow hotspot */
     .hotspot-arrow {
-      font-size: 100px;
-      color: rgb(236, 11, 11);
+      font-size: 200px;
+      color: red;
       cursor: pointer;
+      text-shadow: 2px 2px 6px black;
       animation: pulseArrow 1.5s infinite;
     }
     .hotspot-arrow:hover { color: #4CAF50; }
@@ -80,7 +59,6 @@
       50% { opacity: 0.6; transform: scale(1.3); }
       100% { opacity: 1; transform: scale(1); }
     }
-
 
     /* 🔹 Welcome overlay */
     #welcomeOverlay {
@@ -97,14 +75,8 @@
       text-align: center;
       padding: 20px;
     }
-    #welcomeOverlay h1 {
-      font-size: 2em;
-      margin-bottom: 10px;
-    }
-    #welcomeOverlay p {
-      font-size: 1.1em;
-      margin-bottom: 20px;
-    }
+    #welcomeOverlay h1 { font-size: 2em; margin-bottom: 10px; }
+    #welcomeOverlay p { font-size: 1.1em; margin-bottom: 20px; }
     #startBtn {
       background: #4CAF50;
       border: none;
@@ -116,10 +88,8 @@
       transition: background 0.3s;
     }
     #startBtn:hover { background: #45a049; }
-</style>
+  </style>
 
-
-  <!-- Marzipano library insert *Important -->
   <script src="lib/marzipano.js"></script>
 </head>
 <body>
@@ -129,10 +99,9 @@
     <h1>👋 Welcome to the interactive workshop tour </h1>
     <p>
       🖱️ Drag to look around.<br>
-      ⚪ Click <b>Dots</b> for explore more details about TOX® Monitoring, TOX® Electric Drives and Machine etc<br>
+      ⚪ Click <b>Dots</b>for explore more details about TOX® Monitoring, TOX® Electric Drives and Machine etc<br>
       ➡️ Click <b>Arrows</b> to move between workshop & laboratory halls.
-      
-    
+
       <h3>👆 What is this Virtual Tour For?</h3>
       These panels provide access to various sections where users can explore Tox products and retrieve documents for training or application planning.</p>
     
@@ -141,83 +110,110 @@
   </div>
 
 
-  <!-- Panorama container -->
+ <!-- Panorama container -->
   <div id="pano"></div>
 
   <script>
-
-  // Check if popup was already shown in this session
-if (sessionStorage.getItem("tourStarted")) {
-  document.getElementById("welcomeOverlay").style.display = "none";
-}
-
+// Check if popup was already shown in this session
+  if (sessionStorage.getItem("tourStarted")) {
+    document.getElementById("welcomeOverlay").style.display = "none";
+  }
 // Hide overlay on Start click
-  document.getElementById("startBtn").onclick = function() {
-  document.getElementById("welcomeOverlay").style.display = "none";
-  sessionStorage.setItem("tourStarted", "true"); // Remember only for this session
-};
+    document.getElementById("startBtn").onclick = function() {
+    document.getElementById("welcomeOverlay").style.display = "none";
+    sessionStorage.setItem("tourStarted", "true");// Remember only for this session
+  };
 
-  
+//Create Viewer
 const viewer = new Marzipano.Viewer(document.getElementById("pano"));
+// --- Disable zoom controls (mouse wheel + pinch) ---
+   // const controls = viewer.controls();
+   // controls.disableMethod("zoom");
 
-    // --- Scene 1: Workshop ---
-    const src1 = Marzipano.ImageUrlSource.fromString("assets/para-workshop.jpg");
-    const geo1 = new Marzipano.EquirectGeometry([{ width: 4000 }]);
-    const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 });
+    // --- Lock FOV (no zoom at all) ---
+    const limiter1 = Marzipano.RectilinearView.limit.traditional(
+      4096,             // resolution
+      Math.PI/3,        // minFov (60°)
+      Math.PI/3,        // maxFov (exactly 60°)
+      0,                // minPitch
+      0                 // maxPitch (pitch locked)
+      
+    );
+    const yawlimiter1 = Marzipano.RectilinearView.limit.yaw(
+    Marzipano.util.degToRad(-90),   // yaw left limit
+    Marzipano.util.degToRad(90),    // yaw right limit
+    Marzipano.util.degToRad(-45),   // pitch down limit
+    Marzipano.util.degToRad(45)     // pitch up limit
+    );
+    
+
+// --- Scene 1 :workshop---
+    const src1 = Marzipano.ImageUrlSource.fromString("assets/hall1.png");
+    const geo1 = new Marzipano.EquirectGeometry([{ width: 6000 }]);
+    //const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 });
+    // Limit yaw (left/right) and pitch (up/down)
+     
+    const view1 = new Marzipano.RectilinearView(
+    { yaw: 0, pitch: 0, fov: Math.PI/2 },
+    yawlimiter1
+    ); 
     const scene1 = viewer.createScene({ source: src1, geometry: geo1, view: view1 });
 
-    // --- Scene 2: Hall2 ---
-    const src2 = Marzipano.ImageUrlSource.fromString("assets/hall2.jpg");
-    const geo2 = new Marzipano.EquirectGeometry([{ width: 4000 }]);
-    const view2 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 });
+    
+  // --- Scene 2 : Labotary---
+    const src2 = Marzipano.ImageUrlSource.fromString("assets/hall2.png");
+    const geo2 = new Marzipano.EquirectGeometry([{ width: 6000 }]);
+    //const view2 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 });
+    // Limit yaw (left/right) and pitch (up/down)
+    const yawlimiter2 = Marzipano.RectilinearView.limit.yaw(
+    Marzipano.util.degToRad(-90),   // yaw left limit
+    Marzipano.util.degToRad(90),    // yaw right limit
+    Marzipano.util.degToRad(-45),   // pitch down limit
+    Marzipano.util.degToRad(45)     // pitch up limit
+    );
+
+    const view2 = new Marzipano.RectilinearView(
+    { yaw: 0, pitch: 0, fov: Math.PI/2 },
+    yawlimiter2
+    ); 
+    
     const scene2 = viewer.createScene({ source: src2, geometry: geo2, view: view2 });
 
-     // --- Arrow Hotspot Factory (emoji arrow) ---
-    function createArrowHotspot(targetScene) {
-      const el = document.createElement("div");
-      el.className = "hotspot-arrow";
-      el.textContent = "➡️"; // Unicode arrow emoji
-      el.onclick = () => targetScene.switchTo();
-      return el;
-    }
- 
-    // --- Add arrows ---
-    scene1.hotspotContainer().createHotspot(
-    createArrowHotspot(scene2),
-    { yaw: 0.0, pitch: 0 },
-    { perspective: { radius: 300, extraTransforms: "" } } // optional, keeps it in 3D space
-    );
-    scene2.hotspotContainer().createHotspot(
-    createArrowHotspot(scene1),
-    { yaw: 0.0, pitch: 0.0 },
-    { perspective: { radius: 300, extraTransforms: "" } } // optional, keeps it in 3D space
-    );
+  // --- Arrow Factory with position ---
+  function addArrow(sceneFrom, sceneTo, yaw, pitch, emoji="➡️") {
+    const el = document.createElement("div");
+    el.className = "hotspot-arrow";
+    el.textContent = emoji;
+    el.onclick = () => sceneTo.switchTo();
+    sceneFrom.hotspotContainer().createHotspot(el, { yaw: yaw, pitch: pitch });
+  }
 
+  // Add arrows (you can adjust yaw/pitch)
+  addArrow(scene1, scene2, -2.4, -0.4, "⬅️");  // arrow in hall1 → hall2
+  addArrow(scene2, scene1, 3.2, -0.75, "➡️"); // arrow in hall2 → hall1
 
+  // 🔹 Hotspot 1: Open HTML page 01
+  const dot1 = document.createElement("div");
+  dot1.className = "hotspot-dot";
+  dot1.onclick = () => window.location.href = "hmi01.html";
+  scene1.hotspotContainer().createHotspot(dot1, { yaw: -0.60, pitch: 0.16 });
 
-    // 🔹 Hotspot 1: Open HTML page 01
-    const dot1 = document.createElement("div");
-    dot1.className = "hotspot-dot";
-    dot1.onclick = () => window.location.href = "hmi01.html";
-    scene1.hotspotContainer().createHotspot(dot1, { yaw: -0.54, pitch: -0.34 });
+  // 🔹 Hotspot 2: Open HTML page 02
+  const dot2 = document.createElement("div");
+  dot2.className = "hotspot-dot";
+  dot2.onclick = () => window.location.href = "hmi02.html";
+  scene2.hotspotContainer().createHotspot(dot2, { yaw: 1.5, pitch: 0.48 });
 
-    // 🔹 Hotspot 2: Open HTML page 02
-    const dot2 = document.createElement("div");
-    dot2.className = "hotspot-dot";
-    dot2.onclick = () => window.location.href = "hmi02.html";
-    scene1.hotspotContainer().createHotspot(dot2, { yaw: 0.195, pitch: 0.025 });
+  // 🔹 Hotspot 3: Open HMTL page 03
+  const dot3 = document.createElement("div");
+  dot3.className = "hotspot-dot";
+  dot3.onclick = () => window.location.href = "hmi03.html";
+  scene1.hotspotContainer().createHotspot(dot3, { yaw: 0.071, pitch: 0.823 });
 
-    // 🔹 Hotspot 3: Open HMTL page 03
-    const dot3 = document.createElement("div");
-    dot3.className = "hotspot-dot";
-    dot3.onclick = () => window.location.href = "hmi03.html";
-    scene1.hotspotContainer().createHotspot(dot3, { yaw: 0.32, pitch: -0.83 });
+  // Start at hall1
+  scene1.switchTo();
 
-   
-    // Start at Workshop
-    scene1.switchTo();
-
-    // 🔹 Debug tool: Click anywhere to get yaw/pitch - to locate coordinate of hotspots place
+  // 🔹 Debug tool: Click anywhere to get yaw/pitch - to locate coordinate of hotspots place
     //document.getElementById("pano").addEventListener("click", function(event) {
     //const coords = scene1.view().screenToCoordinates({ x: event.clientX, y: event.clientY });
     //console.log("Clicked at → Yaw:", coords.yaw.toFixed(3), "Pitch:", coords.pitch.toFixed(3));
