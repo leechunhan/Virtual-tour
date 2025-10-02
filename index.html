@@ -213,6 +213,20 @@ const viewer = new Marzipano.Viewer(document.getElementById("pano"));
   // Start at hall1
   scene1.switchTo();
 
+
+// --- Check URL for ?scene= parameter ---
+const params = new URLSearchParams(window.location.search);
+const startScene = params.get("scene");
+
+// Switch to correct scene
+if (startScene === "hall2") {
+  scene2.switchTo();
+} else {
+  scene1.switchTo(); // default
+}
+
+
+
   // 🔹 Debug tool: Click anywhere to get yaw/pitch - to locate coordinate of hotspots place
     //document.getElementById("pano").addEventListener("click", function(event) {
     //const coords = scene1.view().screenToCoordinates({ x: event.clientX, y: event.clientY });
