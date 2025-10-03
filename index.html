@@ -165,16 +165,16 @@
   scene1.hotspotContainer().createHotspot(dot3, { yaw: 0.071, pitch: 0.823 });
 
   // Start scene (or hall2 if ?scene=hall2 in URL)
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("scene") === "hall2") {
+ // const params = new URLSearchParams(window.location.search);
+ // if (params.get("scene") === "hall2") {
     scene2.switchTo();
-  } else {
-    scene1.switchTo();
+ // } else {
+  //  scene1.switchTo();
 
-    setTimeout(() => {
-  scene2.view().setParameters({ yaw: 0, pitch: 0, fov: Math.PI/2 });
-  }, 500);
-  }
+   // setTimeout(() => {
+  //scene2.view().setParameters({ yaw: 0, pitch: 0, fov: Math.PI/2 });
+  //}, 500);
+  //}
 
   </script>
 </body>
