@@ -120,16 +120,21 @@
   const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 }, yawlimiter1);
   const scene1 = viewer.createScene({ source: src1, geometry: geo1, view: view1 });
 
+
+   const yawlimiter2 = Marzipano.RectilinearView.limit.yaw(
+   Marzipano.util.degToRad(-15),   // yaw left limit
+   Marzipano.util.degToRad(100),    // yaw right limit
+   Marzipano.util.degToRad(-45),   // pitch down limit
+   Marzipano.util.degToRad(45)     // pitch up limit
+   );
+
   // --- Scene 2: Laboratory ---
-  const src2 = Marzipano.ImageUrlSource.fromString("assets/hall2.jpg");
+  const src2 = Marzipano.ImageUrlSource.fromString("assets/hall2clean.jpg");
   const geo2 = new Marzipano.EquirectGeometry([{ width: 4096 }]);
-  const limiter2 = Marzipano.RectilinearView.limit.traditional(
-    
-    4096, Math.PI/3, Math.PI/2, -Math.PI/2, Math.PI/2
-    
-     
-  );
-  const view2 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 }, limiter2);
+ // const limiter2 = Marzipano.RectilinearView.limit.traditional(
+   //    4096, Math.PI/3, Math.PI/2, -Math.PI/2, Math.PI/2);
+
+  const view2 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 }, yawlimiter2);
   const scene2 = viewer.createScene({ source: src2, geometry: geo2, view: view2 });
 
   // Arrow helper
@@ -140,7 +145,7 @@
     el.onclick = () => sceneTo.switchTo();
     sceneFrom.hotspotContainer().createHotspot(el, { yaw, pitch });
   }
-  addArrow(scene1, scene2, -2.4, -0.4, "⬅️");
+  addArrow(scene1, scene2, -0.4, -0.4, "⬅️");
   addArrow(scene2, scene1, 3.2, -0.75, "➡️");
 
   // Example hotspots
