@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta charset="UTF-8">
   <title>Workshop Virtual Tour</title>
   <style>
@@ -117,7 +117,7 @@
     //4096, Math.PI/3, Math.PI/2, -Math.PI/2, Math.PI/2);
     
   
-  const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/3 }, yawlimiter1);
+  const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 }, yawlimiter1);
   const scene1 = viewer.createScene({ source: src1, geometry: geo1, view: view1 });
 
 
@@ -134,7 +134,7 @@
  // const limiter2 = Marzipano.RectilinearView.limit.traditional(
    //    4096, Math.PI/3, Math.PI/2, -Math.PI/2, Math.PI/2);
 
-  const view2 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/3 }, yawlimiter2);
+  const view2 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 }, yawlimiter2);
   const scene2 = viewer.createScene({ source: src2, geometry: geo2, view: view2 });
 
   // Arrow helper
@@ -170,9 +170,12 @@
     scene2.switchTo();
   } else {
     scene1.switchTo();
-    scene2.view().setParameters({ yaw: 0, pitch: 0, fov: Math.PI/2 });
+
+    setTimeout(() => {
+  scene2.view().setParameters({ yaw: 0, pitch: 0, fov: Math.PI/2 });
   }, 500);
   }
+
   </script>
 </body>
 </html>
