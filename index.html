@@ -78,8 +78,8 @@
     <h1>👋 Welcome to the interactive workshop tour </h1>
     <p>
       🖱️ Drag to look around.<br>
-      ⚪ Click <b>Dots</b> for details.<br>
-      ➡️ Click <b>Arrows</b> to move between halls.
+      ⚪ Click <b>Dots</b> for explore more details about TOX® Monitoring, TOX® Electric Drives and Machine etc<br>
+      ➡️ Click <b>Arrows</b> to move between workshop & laboratory halls.
       <h3>👆 What is this Virtual Tour For?</h3>
       These panels provide access to various sections where users can explore Tox products and retrieve documents for training or application planning.
     </p>
@@ -99,13 +99,29 @@
     sessionStorage.setItem("tourStarted", "true");
   };
 
-  // Viewer
+  // Viewer + geometry
   const viewer = new Marzipano.Viewer(document.getElementById("pano"));
   const geometry = new Marzipano.EquirectGeometry([{ width: 4096 }]);
-  const view = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 });
+
+  // Different yaw/pitch limits for each hall
+  const limiters = {
+    hall1: Marzipano.RectilinearView.limit.yaw(
+      Marzipano.util.degToRad(-20),
+      Marzipano.util.degToRad(100),
+      Marzipano.util.degToRad(-45),
+      Marzipano.util.degToRad(45)
+    ),
+    hall2: Marzipano.RectilinearView.limit.yaw(
+      Marzipano.util.degToRad(-60),
+      Marzipano.util.degToRad(100),
+      Marzipano.util.degToRad(-5),
+      Marzipano.util.degToRad(5)
+    )
+  };
+
   let scene = null;
 
-  // Hotspot definitions for each hall
+  // Hotspots for each hall
   const hotspotSets = {
     hall1: [
       { type: "dot", yaw: -0.6, pitch: 0.16, link: "hmi01.html" },
@@ -118,10 +134,15 @@
     ]
   };
 
-  // Load a hall (image + hotspots)
+  // Load hall (image + hotspots + limiter)
   function loadHall(name, imagePath) {
     const source = Marzipano.ImageUrlSource.fromString(imagePath);
+    const view = new Marzipano.RectilinearView(
+      { yaw: 0, pitch: 0, fov: Math.PI/2 },
+      limiters[name] || null
+    );
     scene = viewer.createScene({ source, geometry, view });
+
     const container = scene.hotspotContainer();
 
     hotspotSets[name].forEach(h => {
@@ -140,7 +161,7 @@
     scene.switchTo();
   }
 
-  // Start hall (check ?scene param)
+  // Start hall (check ?scene= param)
   const params = new URLSearchParams(window.location.search);
   if (params.get("scene") === "hall2") {
     loadHall("hall2", "assets/hall2clean.jpg");
