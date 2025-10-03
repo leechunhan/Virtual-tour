@@ -113,6 +113,7 @@
   // --- Scene 1: Workshop ---
   const src1 = Marzipano.ImageUrlSource.fromString("assets/hall1clean.jpg");
   const geo1 = new Marzipano.EquirectGeometry([{ width: 4096 }]);
+  //scene1.preload();
   //const limiter1 = Marzipano.RectilinearView.limit.traditional(
     //4096, Math.PI/3, Math.PI/2, -Math.PI/2, Math.PI/2);
     
@@ -129,8 +130,9 @@
    );
 
   // --- Scene 2: Laboratory ---
-  const src2 = Marzipano.ImageUrlSource.fromString("assets/hall1clean.jpg");
+  const src2 = Marzipano.ImageUrlSource.fromString("assets/hall2clean.jpg");
   const geo2 = new Marzipano.EquirectGeometry([{ width: 4096 }]);
+ 
  // const limiter2 = Marzipano.RectilinearView.limit.traditional(
    //    4096, Math.PI/3, Math.PI/2, -Math.PI/2, Math.PI/2);
 
@@ -165,16 +167,16 @@
   scene1.hotspotContainer().createHotspot(dot3, { yaw: 0.071, pitch: 0.823 });
 
   // Start scene (or hall2 if ?scene=hall2 in URL)
- // const params = new URLSearchParams(window.location.search);
- // if (params.get("scene") === "hall2") {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("scene") === "hall2") {
     scene2.switchTo();
- // } else {
-  //  scene1.switchTo();
+    } else {
+    scene1.switchTo();
 
-   // setTimeout(() => {
-  //scene2.view().setParameters({ yaw: 0, pitch: 0, fov: Math.PI/2 });
-  //}, 500);
-  //}
+    //setTimeout(() => {
+    //scene2.view().setParameters({ yaw: 0, pitch: 0, fov: Math.PI/2 });
+    //}, 500);
+    }
 
   </script>
 </body>
