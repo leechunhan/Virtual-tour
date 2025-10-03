@@ -144,7 +144,8 @@
     const el = document.createElement("div");
     el.className = "hotspot-arrow";
     el.textContent = emoji;
-    el.onclick = () => sceneTo.switchTo();
+    el.onclick = () => sceneTo.switchTo({transitionDuration: 1000});
+                       
     sceneFrom.hotspotContainer().createHotspot(el, { yaw, pitch });
   }
   addArrow(scene1, scene2, -0.4, -0.4, "⬅️");
