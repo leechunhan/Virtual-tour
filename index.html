@@ -170,6 +170,8 @@
     scene2.switchTo();
   } else {
     scene1.switchTo();
+    scene2.view().setParameters({ yaw: 0, pitch: 0, fov: Math.PI/2 });
+  }, 500);
   }
   </script>
 </body>
