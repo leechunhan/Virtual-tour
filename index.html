@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8">
+  <title>Workshop Virtual Tour</title>
+  <style>
+    html, body { height: 100%; margin: 0; background-color: black; }
+    #pano { width: 100%; height: 100%; }
+
+    /* Hotspot dot with ripple */
+    .hotspot-dot {
+      position: relative;
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid #000;
+      box-shadow: 0 0 6px rgba(0,0,0,0.5);
+      cursor: pointer; z-index: 1;
+    }
+    .hotspot-dot:hover { background: #4CAF50; transform: scale(1.2); }
+    .hotspot-dot::before, .hotspot-dot::after {
+      content: ""; position: absolute;
+      left: 50%; top: 50%; width: 100%; height: 100%;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.7);
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0; animation: ripple 2s infinite;
+    }
+    .hotspot-dot::after { animation-delay: 1s; }
+    @keyframes ripple {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+      70% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+      100% { opacity: 0; }
+    }
+
+    /* Arrow hotspot */
+    .hotspot-arrow {
+      font-size: 200px;
+      color: red;
+      cursor: pointer;
+      text-shadow: 2px 2px 6px black;
+      animation: pulseArrow 1.5s infinite;
+    }
+    .hotspot-arrow:hover { color: #4CAF50; }
+    @keyframes pulseArrow {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.3); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Welcome overlay */
+    #welcomeOverlay {
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9); color: white;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 9999; text-align: center; padding: 20px;
+    }
+    #welcomeOverlay h1 { font-size: 2em; margin-bottom: 10px; }
+    #welcomeOverlay p { font-size: 1.1em; margin-bottom: 20px; }
+    #startBtn {
+      background: #4CAF50; border: none;
+      padding: 12px 24px; border-radius: 8px;
+      color: white; font-size: 1.2em;
+      cursor: pointer; transition: background 0.3s;
+    }
+    #startBtn:hover { background: #45a049; }
+  </style>
+
+  <script src="lib/marzipano.js"></script>
+</head>
+<body>
+
+  <!-- Welcome popup -->
+  <div id="welcomeOverlay">
+    <h1>👋 Welcome to the interactive workshop tour </h1>
+    <p>
+      🖱️ Drag to look around.<br>
+      ⚪ Click <b>Dots</b> to explore more details.<br>
+      ➡️ Click <b>Arrows</b> to move between halls.
+      <h3>👆 What is this Virtual Tour For?</h3>
+      Explore Tox products and access documents for training or planning.
+    </p>
+    <button id="startBtn">🚀 Start Tour</button>
+  </div>
+
+  <!-- Panorama container -->
+  <div id="pano"></div>
+
+  <script>
+  // Hide welcome if already started
+  if (sessionStorage.getItem("tourStarted")) {
+    document.getElementById("welcomeOverlay").style.display = "none";
+  }
+  document.getElementById("startBtn").onclick = function() {
+    document.getElementById("welcomeOverlay").style.display = "none";
+    sessionStorage.setItem("tourStarted", "true");
+  };
+
+  // Viewer
+  const viewer = new Marzipano.Viewer(document.getElementById("pano"));
+
+  // --- Scene 1: Workshop ---
+  const src1 = Marzipano.ImageUrlSource.fromString("assets/hall1.png");
+  const geo1 = new Marzipano.EquirectGeometry([{ width: 4096 }]);
+  const limiter1 = Marzipano.RectilinearView.limit.traditional(
+    4096, Math.PI/6, Math.PI/2, -Math.PI/3, Math.PI/3
+  );
+  const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/3 }, limiter1);
+  const scene1 = viewer.createScene({ source: src1, geometry: geo1, view: view1 });
+
+  // --- Scene 2: Laboratory ---
+  const src2 = Marzipano.ImageUrlSource.fromString("assets/hall2.png");
+  const geo2 = new Marzipano.EquirectGeometry([{ width: 4096 }]);
+  const limiter2 = Marzipano.RectilinearView.limit.traditional(
+    4096, Math.PI/6, Math.PI/2, -Math.PI/3, Math.PI/3
+  );
+  const view2 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/3 }, limiter2);
+  const scene2 = viewer.createScene({ source: src2, geometry: geo2, view: view2 });
+
+  // Arrow helper
+  function addArrow(sceneFrom, sceneTo, yaw, pitch, emoji="➡️") {
+    const el = document.createElement("div");
+    el.className = "hotspot-arrow";
+    el.textContent = emoji;
+    el.onclick = () => sceneTo.switchTo();
+    sceneFrom.hotspotContainer().createHotspot(el, { yaw, pitch });
+  }
+  addArrow(scene1, scene2, -2.4, -0.4, "⬅️");
+  addArrow(scene2, scene1, 3.2, -0.75, "➡️");
+
+  // Example hotspots
+  const dot1 = document.createElement("div");
+  dot1.className = "hotspot-dot";
+  dot1.onclick = () => window.location.href = "hmi01.html";
+  scene1.hotspotContainer().createHotspot(dot1, { yaw: -0.6, pitch: 0.16 });
+
+  const dot2 = document.createElement("div");
+  dot2.className = "hotspot-dot";
+  dot2.onclick = () => window.location.href = "hmi02.html";
+  scene2.hotspotContainer().createHotspot(dot2, { yaw: 1.5, pitch: 0.48 });
+
+  const dot3 = document.createElement("div");
+  dot3.className = "hotspot-dot";
+  dot3.onclick = () => window.location.href = "hmi03.html";
+  scene1.hotspotContainer().createHotspot(dot3, { yaw: 0.071, pitch: 0.823 });
+
+  // Start scene (or hall2 if ?scene=hall2 in URL)
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("scene") === "hall2") {
+    scene2.switchTo();
+  } else {
+    scene1.switchTo();
+  }
+  </script>
+</body>
+</html>
