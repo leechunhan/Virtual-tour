@@ -78,10 +78,11 @@
     <h1>👋 Welcome to the interactive workshop tour </h1>
     <p>
       🖱️ Drag to look around.<br>
-      ⚪ Click <b>Dots</b> to explore more details.<br>
-      ➡️ Click <b>Arrows</b> to move between halls.
+      ⚪ Click <b>Dots</b>for explore more details about TOX® Monitoring, TOX® Electric Drives and Machine etc<br>
+      ➡️ Click <b>Arrows</b> to move between workshop & laboratory halls.
+
       <h3>👆 What is this Virtual Tour For?</h3>
-      Explore Tox products and access documents for training or planning.
+      These panels provide access to various sections where users can explore Tox products and retrieve documents for training or application planning.</p>
     </p>
     <button id="startBtn">🚀 Start Tour</button>
   </div>
@@ -116,7 +117,7 @@
     4096, Math.PI/1, Math.PI/1, -Math.PI/1, Math.PI/1);
     
   
-  const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/3 }, limiter1);
+  const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 }, limiter1);
   const scene1 = viewer.createScene({ source: src1, geometry: geo1, view: view1 });
 
   // --- Scene 2: Laboratory ---
@@ -128,7 +129,7 @@
     
      
   );
-  const view2 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/3 }, limiter2);
+  const view2 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 }, limiter2);
   const scene2 = viewer.createScene({ source: src2, geometry: geo2, view: view2 });
 
   // Arrow helper
@@ -168,4 +169,3 @@
   </script>
 </body>
 </html>
-
