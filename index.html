@@ -78,11 +78,10 @@
     <h1>👋 Welcome to the interactive workshop tour </h1>
     <p>
       🖱️ Drag to look around.<br>
-      ⚪ Click <b>Dots</b>for explore more details about TOX® Monitoring, TOX® Electric Drives and Machine etc<br>
-      ➡️ Click <b>Arrows</b> to move between workshop & laboratory halls.
-
+      ⚪ Click <b>Dots</b> for details.<br>
+      ➡️ Click <b>Arrows</b> to move between halls.
       <h3>👆 What is this Virtual Tour For?</h3>
-      These panels provide access to various sections where users can explore Tox products and retrieve documents for training or application planning.</p>
+      These panels provide access to various sections where users can explore Tox products and retrieve documents for training or application planning.
     </p>
     <button id="startBtn">🚀 Start Tour</button>
   </div>
@@ -102,83 +101,52 @@
 
   // Viewer
   const viewer = new Marzipano.Viewer(document.getElementById("pano"));
+  const geometry = new Marzipano.EquirectGeometry([{ width: 4096 }]);
+  const view = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 });
+  let scene = null;
 
-  const yawlimiter1 = Marzipano.RectilinearView.limit.yaw(
-   Marzipano.util.degToRad(-20),   // yaw left limit
-   Marzipano.util.degToRad(100),    // yaw right limit
-   Marzipano.util.degToRad(-45),   // pitch down limit
-   Marzipano.util.degToRad(45)     // pitch up limit
-   );
+  // Hotspot definitions for each hall
+  const hotspotSets = {
+    hall1: [
+      { type: "dot", yaw: -0.6, pitch: 0.16, link: "hmi01.html" },
+      { type: "dot", yaw: 0.071, pitch: 0.823, link: "hmi03.html" },
+      { type: "arrow", yaw: -0.4, pitch: -0.4, target: "hall2", emoji: "⬅️" }
+    ],
+    hall2: [
+      { type: "dot", yaw: 1.5, pitch: 0.48, link: "hmi02.html" },
+      { type: "arrow", yaw: 3.2, pitch: -0.75, target: "hall1", emoji: "➡️" }
+    ]
+  };
 
-  // --- Scene 1: Workshop ---
-  const src1 = Marzipano.ImageUrlSource.fromString("assets/hall1clean.jpg");
-  const geo1 = new Marzipano.EquirectGeometry([{ width: 4096 }]);
-  //scene1.preload();
-  //const limiter1 = Marzipano.RectilinearView.limit.traditional(
-    //4096, Math.PI/3, Math.PI/2, -Math.PI/2, Math.PI/2);
-    
-  
-  const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 }, yawlimiter1);
-  const scene1 = viewer.createScene({ source: src1, geometry: geo1, view: view1 });
+  // Load a hall (image + hotspots)
+  function loadHall(name, imagePath) {
+    const source = Marzipano.ImageUrlSource.fromString(imagePath);
+    scene = viewer.createScene({ source, geometry, view });
+    const container = scene.hotspotContainer();
 
+    hotspotSets[name].forEach(h => {
+      let el = document.createElement("div");
+      if (h.type === "dot") {
+        el.className = "hotspot-dot";
+        el.onclick = () => window.location.href = h.link;
+      } else if (h.type === "arrow") {
+        el.className = "hotspot-arrow";
+        el.textContent = h.emoji || "➡️";
+        el.onclick = () => loadHall(h.target, `assets/${h.target}clean.jpg`);
+      }
+      container.createHotspot(el, { yaw: h.yaw, pitch: h.pitch });
+    });
 
-   const yawlimiter2 = Marzipano.RectilinearView.limit.yaw(
-   Marzipano.util.degToRad(-60),   // yaw left limit
-   Marzipano.util.degToRad(100),    // yaw right limit
-   Marzipano.util.degToRad(-5),   // pitch down limit
-   Marzipano.util.degToRad(5)     // pitch up limit
-   );
-
-  // --- Scene 2: Laboratory ---
-  const src2 = Marzipano.ImageUrlSource.fromString("assets/hall2clean.jpg");
-  const geo2 = new Marzipano.EquirectGeometry([{ width: 4096 }]);
- 
- // const limiter2 = Marzipano.RectilinearView.limit.traditional(
-   //    4096, Math.PI/3, Math.PI/2, -Math.PI/2, Math.PI/2);
-
-  const view2 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 }, yawlimiter2);
-  const scene2 = viewer.createScene({ source: src2, geometry: geo2, view: view2 });
-
-  // Arrow helper
-  function addArrow(sceneFrom, sceneTo, yaw, pitch, emoji="➡️") {
-    const el = document.createElement("div");
-    el.className = "hotspot-arrow";
-    el.textContent = emoji;
-    el.onclick = () => sceneTo.switchTo({transitionDuration: 2000,blend:true});
-                       
-    sceneFrom.hotspotContainer().createHotspot(el, { yaw, pitch });
+    scene.switchTo();
   }
-  addArrow(scene1, scene2, -0.4, -0.4, "⬅️");
-  addArrow(scene2, scene1, 3.2, -0.75, "➡️");
 
-  // Example hotspots
-  const dot1 = document.createElement("div");
-  dot1.className = "hotspot-dot";
-  dot1.onclick = () => window.location.href = "hmi01.html";
-  scene1.hotspotContainer().createHotspot(dot1, { yaw: -0.6, pitch: 0.16 });
-
-  const dot2 = document.createElement("div");
-  dot2.className = "hotspot-dot";
-  dot2.onclick = () => window.location.href = "hmi02.html";
-  scene2.hotspotContainer().createHotspot(dot2, { yaw: 1.5, pitch: 0.48 });
-
-  const dot3 = document.createElement("div");
-  dot3.className = "hotspot-dot";
-  dot3.onclick = () => window.location.href = "hmi03.html";
-  scene1.hotspotContainer().createHotspot(dot3, { yaw: 0.071, pitch: 0.823 });
-
-  // Start scene (or hall2 if ?scene=hall2 in URL)
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("scene") === "hall2") {
-    scene2.switchTo();
-    } else {
-    scene1.switchTo();
-
-    //setTimeout(() => {
-    //scene2.view().setParameters({ yaw: 0, pitch: 0, fov: Math.PI/2 });
-    //}, 500);
-    }
-
+  // Start hall (check ?scene param)
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("scene") === "hall2") {
+    loadHall("hall2", "assets/hall2clean.jpg");
+  } else {
+    loadHall("hall1", "assets/hall1clean.jpg");
+  }
   </script>
 </body>
 </html>
