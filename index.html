@@ -102,12 +102,12 @@
   // Viewer
   const viewer = new Marzipano.Viewer(document.getElementById("pano"));
 
-  const yawlimiter1 = Marzipano.RectilinearView.limit.yaw(
-    Marzipano.util.degToRad(-90),   // yaw left limit
-    Marzipano.util.degToRad(90),    // yaw right limit
-    Marzipano.util.degToRad(-45),   // pitch down limit
-    Marzipano.util.degToRad(45)     // pitch up limit
-    );
+  //const yawlimiter1 = Marzipano.RectilinearView.limit.yaw(
+   // Marzipano.util.degToRad(-90),   // yaw left limit
+   // Marzipano.util.degToRad(90),    // yaw right limit
+  //  Marzipano.util.degToRad(-45),   // pitch down limit
+   // Marzipano.util.degToRad(45)     // pitch up limit
+   // );
 
   // --- Scene 1: Workshop ---
   const src1 = Marzipano.ImageUrlSource.fromString("assets/hall1.png");
@@ -116,7 +116,7 @@
     4096, Math.PI/1, Math.PI/1, -Math.PI/1, Math.PI/1);
     
   
-  const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/3 }, yawlimiter1);
+  const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/3 }, limiter1);
   const scene1 = viewer.createScene({ source: src1, geometry: geo1, view: view1 });
 
   // --- Scene 2: Laboratory ---
@@ -168,3 +168,4 @@
   </script>
 </body>
 </html>
+
