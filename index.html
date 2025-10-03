@@ -111,7 +111,7 @@
    // );
 
   // --- Scene 1: Workshop ---
-  const src1 = Marzipano.ImageUrlSource.fromString("assets/hall1.png");
+  const src1 = Marzipano.ImageUrlSource.fromString("assets/hall1.jpg");
   const geo1 = new Marzipano.EquirectGeometry([{ width: 6000 }]);
   const limiter1 = Marzipano.RectilinearView.limit.traditional(
     6000, Math.PI/2, Math.PI/2, -Math.PI/2, Math.PI/2);
@@ -121,7 +121,7 @@
   const scene1 = viewer.createScene({ source: src1, geometry: geo1, view: view1 });
 
   // --- Scene 2: Laboratory ---
-  const src2 = Marzipano.ImageUrlSource.fromString("assets/hall2.png");
+  const src2 = Marzipano.ImageUrlSource.fromString("assets/hall2.jpg");
   const geo2 = new Marzipano.EquirectGeometry([{ width: 6000 }]);
   const limiter2 = Marzipano.RectilinearView.limit.traditional(
     
