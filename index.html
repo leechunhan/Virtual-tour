@@ -114,7 +114,7 @@
   const src1 = Marzipano.ImageUrlSource.fromString("assets/hall1.jpg");
   const geo1 = new Marzipano.EquirectGeometry([{ width: 4096 }]);
   const limiter1 = Marzipano.RectilinearView.limit.traditional(
-    4096, Math.PI/2, Math.PI/2, -Math.PI/2, Math.PI/2);
+    4096, Math.PI/3, Math.PI/2, -Math.PI/2, Math.PI/2);
     
   
   const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 }, limiter1);
@@ -125,7 +125,7 @@
   const geo2 = new Marzipano.EquirectGeometry([{ width: 4096 }]);
   const limiter2 = Marzipano.RectilinearView.limit.traditional(
     
-    4096, Math.PI/2, Math.PI/2, -Math.PI/2, Math.PI/2
+    4096, Math.PI/3, Math.PI/2, -Math.PI/2, Math.PI/2
     
      
   );
