@@ -149,16 +149,19 @@ const viewer = new Marzipano.Viewer(document.getElementById("pano"));
     
 
 // --- Scene 1 :workshop---
-    const src1 = Marzipano.ImageUrlSource.fromString("assets/hall1.png");
-    const geo1 = new Marzipano.EquirectGeometry([{ width: 6000 }]);
-    //const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 });
+    //const src1 = Marzipano.ImageUrlSource.fromString("assets/hall1.png");
+   // const geo1 = new Marzipano.EquirectGeometry([{ width: 6000 }]);
     // Limit yaw (left/right) and pitch (up/down)
-    Marzipano.RectilinearView.limit.traditional(4096, Math.PI/6, Math.PI/2) // 30°–90°
-    const view1 = new Marzipano.RectilinearView(
-    { yaw: 0, pitch: 0, fov: Math.PI/2 },
-    yawlimiter1
-    ); 
-    const scene1 = viewer.createScene({ source: src1, geometry: geo1, view: view1 });
+   // Marzipano.RectilinearView.limit.traditional(4096, Math.PI/6, Math.PI/2) // 30°–90°
+    //const view1 = new Marzipano.RectilinearView(
+    //{ yaw: 0, pitch: 0, fov: Math.PI/2 },
+    //yawlimiter1
+    //); 
+   // const scene1 = viewer.createScene({ source: src1, geometry: geo1, view: view1 });
+   const src1 = Marzipano.ImageUrlSource.fromString("assets/hall1.png");
+   const geo1 = new Marzipano.EquirectGeometry([{ width: 4096 }]);
+   const view1 = new Marzipano.RectilinearView({ yaw: 0, pitch: 0, fov: Math.PI/2 });
+   const scene1 = viewer.createScene({ source: src1, geometry: geo1, view: view1 });
 
     
   // --- Scene 2 : Labotary---
